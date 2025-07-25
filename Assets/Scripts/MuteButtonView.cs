@@ -6,22 +6,28 @@ using UnityEngine;
 public class MuteButtonView : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _buttonText;
+    [SerializeField] private SoundMuter _soundMuter;
 
     private string _mute = "Mute";
     private string _unmute = "Unmute";
 
     private void Start()
     {
-        ChangeText();
+        StartCoroutine(ChangeTextOnNextFrame());
     }
 
     public void ChangeText()
     {
-        if (PlayerPrefs.GetInt(PlayerPrefsKeyNames.IsVolumeMuted) == 0)
-            _buttonText.text = _mute;
-        else
+        if (_soundMuter.Muted)
             _buttonText.text = _unmute;
+        else
+            _buttonText.text = _mute;
+    }
 
-        Debug.Log(PlayerPrefs.GetInt(PlayerPrefsKeyNames.IsVolumeMuted));
+    private IEnumerator ChangeTextOnNextFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
+        ChangeText();
     }
 }

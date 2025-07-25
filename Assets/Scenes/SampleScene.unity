@@ -580,6 +580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioMixerGroupInfo: {fileID: 557197873}
+  _soundMuter: {fileID: 1834021551}
 --- !u!114 &403223917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1099,6 +1100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioMixerGroupInfo: {fileID: 2052208043}
+  _soundMuter: {fileID: 1834021551}
 --- !u!114 &756946077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1803,6 +1805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioMixerGroupInfo: {fileID: 749415352}
+  _soundMuter: {fileID: 1834021551}
 --- !u!114 &1136619538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3416,10 +3419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76192030a2baf847a2a631a416ac23e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _audioMixerGroupInfos:
-  - {fileID: 557197873}
-  - {fileID: 749415352}
-  - {fileID: 2052208043}
+  _audioMixerGroupInfoMaster: {fileID: 557197873}
+  _masterSliderVolumeChanger: {fileID: 403223916}
 --- !u!114 &1834021552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3433,6 +3434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonText: {fileID: 1445420221}
+  _soundMuter: {fileID: 1834021551}
 --- !u!1 &1855015563
 GameObject:
   m_ObjectHideFlags: 0

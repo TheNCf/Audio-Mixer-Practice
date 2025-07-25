@@ -1,40 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class SoundMuter : VolumeChangerAbstract
 {
-    [SerializeField] private List<AudioMixerGroupInfo> _audioMixerGroupInfos;
+    [SerializeField] private AudioMixerGroupInfo _audioMixerGroupInfoMaster;
+    [SerializeField] private SliderVolumeChanger _masterSliderVolumeChanger;
 
     private float _volumeDisabled = 0.0001f;
 
-    public bool Mute => PlayerPrefs.GetInt(PlayerPrefsKeyNames.IsVolumeMuted) == 1;
+    public bool Muted { get; private set; }
 
     private void Start()
     {
-        ToggleAllMixers(Mute);
+        Muted = PlayerPrefs.GetInt(PlayerPrefsKeyNames.IsVolumeMuted) == 1;
+        ToggleMixerMute(Muted);
+    }
+
+    private void OnDisable()
+    {
+        PlayerPrefs.SetInt(PlayerPrefsKeyNames.IsVolumeMuted, Muted ? 1 : 0);
     }
 
     public void ChangeMute()
     {
-        if (Mute)
-            PlayerPrefs.SetInt(PlayerPrefsKeyNames.IsVolumeMuted, 0);
-        else
-            PlayerPrefs.SetInt(PlayerPrefsKeyNames.IsVolumeMuted, 1);
-
-        ToggleAllMixers(Mute);
+        Muted = !Muted;
+        ToggleMixerMute(Muted);
     }
 
-    private void ToggleAllMixers(bool mute)
+    private void ToggleMixerMute(bool muted)
     {
-        foreach (var mixerInfo in _audioMixerGroupInfos)
-        {
-            if (mute)
-                ChangeMixerVolume(_volumeDisabled, mixerInfo);
-            else
-                ChangeMixerVolume(PlayerPrefs.GetFloat(mixerInfo.AudioMixerParameter.ToString()), mixerInfo);
-        }
+        if (muted)
+            ChangeMixerVolume(_volumeDisabled, _audioMixerGroupInfoMaster);
+        else
+            ChangeMixerVolume(_masterSliderVolumeChanger.CurrentVolume, _audioMixerGroupInfoMaster);
     }
 }

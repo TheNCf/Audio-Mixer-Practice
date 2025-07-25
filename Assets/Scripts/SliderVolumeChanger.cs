@@ -3,20 +3,27 @@ using UnityEngine;
 public class SliderVolumeChanger : VolumeChangerAbstract
 {
     [SerializeField] private AudioMixerGroupInfo _audioMixerGroupInfo;
+    [SerializeField] private SoundMuter _soundMuter;
 
-    public float CurrentVolume => PlayerPrefs.GetFloat(_audioMixerGroupInfo.AudioMixerParameter.ToString());
+    public float CurrentVolume { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
+        CurrentVolume = PlayerPrefs.GetFloat(_audioMixerGroupInfo.AudioMixerParameter.ToString());
         ChangeVolume(CurrentVolume);
+    }
+
+    private void OnDisable()
+    {
+        PlayerPrefs.SetFloat(_audioMixerGroupInfo.AudioMixerParameter.ToString(), CurrentVolume);
     }
 
     public void ChangeVolume(float volume)
     {
-        if (PlayerPrefs.GetInt(PlayerPrefsKeyNames.IsVolumeMuted) == 1)
+        if (_soundMuter.Muted)
             return;
 
         ChangeMixerVolume(volume, _audioMixerGroupInfo);
-        PlayerPrefs.SetFloat(_audioMixerGroupInfo.AudioMixerParameter.ToString(), volume);
+        CurrentVolume = volume;
     }
 }
