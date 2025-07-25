@@ -1,29 +1,44 @@
 using UnityEngine;
+using UnityEngine.UI;
 
+[RequireComponent(typeof(Button))]
 public class SoundMuter : VolumeChangerAbstract
 {
     [SerializeField] private AudioMixerGroupInfo _audioMixerGroupInfoMaster;
     [SerializeField] private SliderVolumeChanger _masterSliderVolumeChanger;
 
+    private Button _button;
+
     private float _volumeDisabled = 0.0001f;
 
-    public bool Muted { get; private set; }
+    public bool IsMuted { get; private set; }
+
+    private void Awake()
+    {
+        _button = GetComponent<Button>();
+    }
+
+    private void OnEnable()
+    {
+        _button.onClick.AddListener(ChangeMute);
+    }
 
     private void Start()
     {
-        Muted = PlayerPrefs.GetInt(PlayerPrefsKeyNames.IsVolumeMuted) == 1;
-        ToggleMixerMute(Muted);
+        IsMuted = PlayerPrefs.GetInt(PlayerPrefsKeyNames.IsVolumeMuted) == 1;
+        ToggleMixerMute(IsMuted);
     }
 
     private void OnDisable()
     {
-        PlayerPrefs.SetInt(PlayerPrefsKeyNames.IsVolumeMuted, Muted ? 1 : 0);
+        PlayerPrefs.SetInt(PlayerPrefsKeyNames.IsVolumeMuted, IsMuted ? 1 : 0);
+        _button.onClick.RemoveListener(ChangeMute);
     }
 
     public void ChangeMute()
     {
-        Muted = !Muted;
-        ToggleMixerMute(Muted);
+        IsMuted = !IsMuted;
+        ToggleMixerMute(IsMuted);
     }
 
     private void ToggleMixerMute(bool muted)
